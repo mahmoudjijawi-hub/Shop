@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}إنشاء حساب{% endblock %}
+
+{% block content %}
+<section class="section auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <h1>إنشاء حساب</h1>
+            <p class="auth-subtitle">أنشئ حسابك وابدأ التسوق الآن.</p>
+
+            <form method="post" class="auth-form">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-primary btn-block">إنشاء حساب</button>
+            </form>
+
+            <p class="auth-footer">
+                لديك حساب بالفعل؟ <a href="{% url 'accounts:login' %}">تسجيل الدخول</a>
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

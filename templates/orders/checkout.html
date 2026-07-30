@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}إتمام الشراء{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="page-title">إتمام الشراء</h1>
+
+        <div class="checkout-layout">
+            <div class="checkout-form-card">
+                <h2>معلومات التوصيل</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">تأكيد الطلب</button>
+                </form>
+            </div>
+
+            <div class="cart-summary">
+                <h2>ملخص الطلب</h2>
+                {% for item in cart %}
+                <div class="summary-item">
+                    <span>{{ item.product.name }} × {{ item.quantity }}</span>
+                    <span>{{ item.total_price }} ر.س</span>
+                </div>
+                {% endfor %}
+                <div class="summary-row total">
+                    <span>المجموع:</span>
+                    <span>{{ cart.get_total_price }} ر.س</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

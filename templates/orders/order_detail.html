@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}طلب #{{ order.id }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="{% url 'orders:order_list' %}">طلباتي</a>
+            <span>/</span>
+            <span>طلب #{{ order.id }}</span>
+        </nav>
+
+        <div class="order-detail">
+            <div class="order-detail-header">
+                <h1>طلب #{{ order.id }}</h1>
+                <span class="badge badge-status badge-{{ order.status }}">{{ order.get_status_display }}</span>
+            </div>
+
+            <div class="order-detail-grid">
+                <div class="order-info-card">
+                    <h3>معلومات التوصيل</h3>
+                    <p><strong>الاسم:</strong> {{ order.full_name }}</p>
+                    <p><strong>البريد:</strong> {{ order.email }}</p>
+                    <p><strong>الهاتف:</strong> {{ order.phone }}</p>
+                    <p><strong>العنوان:</strong> {{ order.address }}</p>
+                    <p><strong>المدينة:</strong> {{ order.city }}</p>
+                    <p><strong>تاريخ الطلب:</strong> {{ order.created_at|date:"Y/m/d H:i" }}</p>
+                </div>
+
+                <div class="order-info-card">
+                    <h3>عناصر الطلب</h3>
+                    <table class="order-items-table">
+                        <thead>
+                            <tr>
+                                <th>المنتج</th>
+                                <th>السعر</th>
+                                <th>الكمية</th>
+                                <th>المجموع</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                            <tr>
+                                <td><a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a></td>
+                                <td>{{ item.price }} ر.س</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.subtotal }} ر.س</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3"><strong>المجموع الكلي</strong></td>
+                                <td><strong>{{ order.total_price }} ر.س</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <a href="{% url 'orders:order_list' %}" class="btn btn-outline">العودة إلى الطلبات</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
