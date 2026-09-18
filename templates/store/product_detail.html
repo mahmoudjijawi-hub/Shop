@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="{% url 'store:home' %}">الرئيسية</a>
+            <span>/</span>
+            <a href="{% url 'store:product_list' %}">المنتجات</a>
+            <span>/</span>
+            <a href="{% url 'store:category_detail' product.category.slug %}">{{ product.category.name }}</a>
+            <span>/</span>
+            <span>{{ product.name }}</span>
+        </nav>
+
+        <div class="product-detail">
+            <div class="product-detail-image">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <div class="product-placeholder large">🛍️</div>
+                {% endif %}
+            </div>
+            <div class="product-detail-info">
+                <span class="product-category">{{ product.category.name }}</span>
+                <h1>{{ product.name }}</h1>
+                <p class="product-detail-price">{{ product.price }} ر.س</p>
+                <p class="product-detail-desc">{{ product.description }}</p>
+
+                <div class="stock-info">
+                    {% if product.in_stock %}
+                        <span class="badge badge-success">متوفر ({{ product.stock }} في المخزون)</span>
+                    {% else %}
+                        <span class="badge badge-danger">غير متوفر</span>
+                    {% endif %}
+                </div>
+
+                {% if product.in_stock %}
+                <form action="{% url 'cart:cart_add' product.id %}" method="post" class="add-to-cart-detail">
+                    {% csrf_token %}
+                    <div class="quantity-selector">
+                        <label for="quantity">الكمية:</label>
+                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock }}" class="quantity-input">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg">أضف إلى السلة</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if related_products %}
+        <div class="related-products">
+            <h2>منتجات مشابهة</h2>
+            <div class="products-grid">
+                {% for product in related_products %}
+                    {% include 'store/partials/product_card.html' %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

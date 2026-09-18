@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}حسابي{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="page-title">حسابي</h1>
+
+        <div class="profile-layout">
+            <div class="profile-card">
+                <h2>معلومات الحساب</h2>
+                <div class="profile-info">
+                    <p><strong>اسم المستخدم:</strong> {{ user.username }}</p>
+                    <p><strong>الاسم:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                    <p><strong>البريد:</strong> {{ user.email }}</p>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <h2>معلومات التوصيل</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="{% url 'store:home' %}">الرئيسية</a>
+            <span>/</span>
+            <span>{{ category.name }}</span>
+        </nav>
+
+        <h1 class="page-title">{{ category.name }}</h1>
+        {% if category.description %}
+            <p class="page-subtitle">{{ category.description }}</p>
+        {% endif %}
+
+        <div class="products-grid">
+            {% for product in products %}
+                {% include 'store/partials/product_card.html' %}
+            {% empty %}
+                <div class="empty-state">
+                    <p>لا توجد منتجات في هذه الفئة.</p>
+                    <a href="{% url 'store:product_list' %}" class="btn btn-primary">تصفح جميع المنتجات</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

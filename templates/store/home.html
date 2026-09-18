@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}الرئيسية{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-content">
+        <h1>تسوق بثقة واستمتع بأفضل المنتجات</h1>
+        <p>اكتشف مجموعة واسعة من المنتجات المميزة بأسعار منافسة وخدمة توصيل سريعة.</p>
+        <a href="{% url 'store:product_list' %}" class="btn btn-primary btn-lg">تصفح المنتجات</a>
+    </div>
+</section>
+
+{% if categories %}
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">الفئات</h2>
+        <div class="categories-grid">
+            {% for category in categories %}
+            <a href="{% url 'store:category_detail' category.slug %}" class="category-card">
+                <div class="category-icon">📦</div>
+                <h3>{{ category.name }}</h3>
+                {% if category.description %}
+                    <p>{{ category.description|truncatewords:10 }}</p>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">منتجات مميزة</h2>
+            <a href="{% url 'store:product_list' %}" class="btn btn-outline">عرض الكل</a>
+        </div>
+        <div class="products-grid">
+            {% for product in featured_products %}
+                {% include 'store/partials/product_card.html' %}
+            {% empty %}
+                <p class="empty-message">لا توجد منتجات حالياً.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section features">
+    <div class="container features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🚚</div>
+            <h3>توصيل سريع</h3>
+            <p>توصيل سريع وآمن لجميع المناطق</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">💳</div>
+            <h3>دفع آمن</h3>
+            <p>معاملات مالية آمنة ومحمية</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔄</div>
+            <h3>إرجاع سهل</h3>
+            <p>سياسة إرجاع مرنة خلال 14 يوم</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📞</div>
+            <h3>دعم 24/7</h3>
+            <p>فريق دعم متاح لمساعدتك</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

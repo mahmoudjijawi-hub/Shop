@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}طلباتي{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="page-title">طلباتي</h1>
+
+        {% if orders %}
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <h3>طلب #{{ order.id }}</h3>
+                        <p class="order-date">{{ order.created_at|date:"Y/m/d H:i" }}</p>
+                    </div>
+                    <span class="badge badge-status badge-{{ order.status }}">{{ order.get_status_display }}</span>
+                </div>
+                <div class="order-body">
+                    <p><strong>المجموع:</strong> {{ order.total_price }} ر.س</p>
+                    <p><strong>العنوان:</strong> {{ order.address }}, {{ order.city }}</p>
+                    <p><strong>عدد المنتجات:</strong> {{ order.items.count }}</p>
+                </div>
+                <div class="order-footer">
+                    <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-outline btn-sm">عرض التفاصيل</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <h2>لا توجد طلبات</h2>
+            <p>لم تقم بأي طلبات حتى الآن.</p>
+            <a href="{% url 'store:product_list' %}" class="btn btn-primary">ابدأ التسوق</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

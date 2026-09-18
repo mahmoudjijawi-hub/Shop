@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}المنتجات{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="page-title">المنتجات</h1>
+
+        <div class="shop-layout">
+            <aside class="sidebar">
+                <div class="sidebar-card">
+                    <h3>الفئات</h3>
+                    <ul class="category-list">
+                        <li>
+                            <a href="{% url 'store:product_list' %}" class="{% if not current_category %}active{% endif %}">
+                                جميع المنتجات
+                            </a>
+                        </li>
+                        {% for category in categories %}
+                        <li>
+                            <a href="?category={{ category.slug }}" class="{% if current_category == category.slug %}active{% endif %}">
+                                {{ category.name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </aside>
+
+            <div class="shop-main">
+                <div class="shop-toolbar">
+                    <span class="results-count">{{ products.count }} منتج</span>
+                    <form method="get" class="sort-form">
+                        {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
+                        {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
+                        <select name="sort" onchange="this.form.submit()" class="sort-select">
+                            <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>الأحدث</option>
+                            <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>السعر: من الأقل</option>
+                            <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>السعر: من الأعلى</option>
+                            <option value="name" {% if sort_by == 'name' %}selected{% endif %}>الاسم</option>
+                        </select>
+                    </form>
+                </div>
+
+                <div class="products-grid">
+                    {% for product in products %}
+                        {% include 'store/partials/product_card.html' %}
+                    {% empty %}
+                        <div class="empty-state">
+                            <p>لا توجد منتجات مطابقة لبحثك.</p>
+                            <a href="{% url 'store:product_list' %}" class="btn btn-primary">عرض جميع المنتجات</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

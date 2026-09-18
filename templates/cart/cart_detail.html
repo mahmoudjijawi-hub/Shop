@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}سلة التسوق{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="page-title">سلة التسوق</h1>
+
+        {% if cart %}
+        <div class="cart-layout">
+            <div class="cart-items">
+                {% for item in cart %}
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        {% else %}
+                            <div class="product-placeholder">🛍️</div>
+                        {% endif %}
+                    </div>
+                    <div class="cart-item-info">
+                        <h3><a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a></h3>
+                        <p class="cart-item-price">{{ item.price }} ر.س</p>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <form action="{% url 'cart:cart_update' item.product.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" class="quantity-input small">
+                            <button type="submit" class="btn btn-sm btn-outline">تحديث</button>
+                        </form>
+                    </div>
+                    <div class="cart-item-total">
+                        {{ item.total_price }} ر.س
+                    </div>
+                    <form action="{% url 'cart:cart_remove' item.product.id %}" method="post" class="cart-item-remove">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-icon" title="إزالة">✕</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="cart-summary">
+                <h2>ملخص الطلب</h2>
+                <div class="summary-row">
+                    <span>عدد المنتجات:</span>
+                    <span>{{ cart|length }}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>المجموع:</span>
+                    <span>{{ cart.get_total_price }} ر.س</span>
+                </div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'orders:checkout' %}" class="btn btn-primary btn-block btn-lg">إتمام الشراء</a>
+                {% else %}
+                    <p class="login-prompt">يجب تسجيل الدخول لإتمام الشراء.</p>
+                    <a href="{% url 'accounts:login' %}?next={% url 'orders:checkout' %}" class="btn btn-primary btn-block">تسجيل الدخول</a>
+                {% endif %}
+                <a href="{% url 'store:product_list' %}" class="btn btn-outline btn-block">متابعة التسوق</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🛒</div>
+            <h2>سلة التسوق فارغة</h2>
+            <p>لم تضف أي منتجات إلى سلتك بعد.</p>
+            <a href="{% url 'store:product_list' %}" class="btn btn-primary">تصفح المنتجات</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
